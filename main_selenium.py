@@ -9,7 +9,7 @@ chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument('--headless')
 chrome_options.add_argument('--no-sandbox')
 
-browser = webdriver.Chrome(executable_path=CHROME_DRIVER_PATH, chrome_options=chrome_options, service_args=['--verbose', './chromedriver.log'])
+browser = webdriver.Chrome(executable_path=CHROME_DRIVER_PATH, chrome_options=chrome_options, service_args=['--verbose', '.log/chromedriver.log'])
 # browser = webdriver.Chrome(executable_path=CHROME_DRIVER_PATH)
 browser.get(URL)
 
