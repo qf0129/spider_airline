@@ -2,7 +2,6 @@
 from flask import Flask, render_template, jsonify
 from flask.globals import request
 from selenium import webdriver
-from time import sleep
 import time
 
 
@@ -35,18 +34,24 @@ def get_tickets():
     city2 = request.args.get('c2', '').lower()
     start_date = request.args.get('d', '')
 
+    print('Date: {}, From: {}, To: {}'.format(start_date, city1, city2))
     if city1 not in CITY_DICT.keys() or city2 not in CITY_DICT.keys():
         return jsonify(msg='invalid city'), 400
 
     URL = "http://www.ceair.com/booking/%s-%s-%s_CNY.html" % (city1, city2, start_date)
     browser.get(URL)
-    time.sleep(2)
     tickets = _get_tictet()
     return jsonify(tickets=tickets)
 
-
 def _get_tictet():
-    elements=browser.find_elements_by_class_name("flight")
+    elements = []
+    for i in range(5):
+        print('Loop: %s' % str(i))
+        time.sleep(1)
+        elements=browser.find_elements_by_class_name("flight")
+        if len(elements) > 1:
+            break
+
     tickets = []
     for el in elements:
         title_list = el.find_element_by_class_name("title").text.replace(' ', '').split("|")
