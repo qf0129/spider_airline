@@ -6,16 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        *{
-            margin: 0;padding: 0;
+        * {
+            margin: 0;
+            padding: 0;
         }
-        body{
+
+        body {
             text-align: center;
         }
-        #form_div{
+
+        #form_div {
             padding: 10px;
             background: #eee;
         }
+
         .loading_div {
             text-align: center;
             color: #aaa;
@@ -30,17 +34,17 @@
         <label for="">出发城市</label>
         <select name="" id="c1">
             {% for city in city_list %}
-            <option value="{{city[1]}}">{{city[0]}}</option>
+            <option value="{{city[0]}}" {% if city[0] == "SHA" %} selected {% endif %} >{{city[1]}}</option>
             {% endfor %}
         </select>
         <label for="">到达城市</label>
         <select name="" id="c2">
             {% for city in city_list %}
-            <option value="{{city[1]}}">{{city[0]}}</option>
+            <option value="{{city[0]}}" {% if city[0] == "DLU" %} selected {% endif %} >{{city[1]}}</option>
             {% endfor %}
         </select>
         <label for="">出发日期</label>
-        <input type="text" id="start_date" value="201112">
+        <input type="text" id="start_date" value="">
         <button id="query_btn" onclick="get_tickets()">查询</button>
     </div>
     <div id="data_table">
@@ -66,13 +70,18 @@
     <% } %>
     </script>
 <script>
-
+    var c1 = document.querySelector("#c1");
+    var c2 = document.querySelector("#c2");
+    var start_date = document.querySelector("#start_date");
     var data_table = document.querySelector("#data_table");
+
+    var da = new Date();
+    var m = (String(da.getMonth() + 1).length == 1) ? '0' + String(da.getMonth() + 1) : String(da.getMonth() + 1)
+    var d = (String(da.getDate() + 1).length == 1) ? '0' + String(da.getDate() + 1) : String(da.getDate() + 1)
+    start_date.value = String(da.getFullYear()).substr(2,2) + m + d;
+
     function get_tickets() {
         data_table.innerHTML = "<div class='loading_div'>loading ...</div>";
-        var c1 = document.querySelector("#c1");
-        var c2 = document.querySelector("#c2");
-        var start_date = document.querySelector("#start_date");
 
         var url = "/tickets?c1=" + c1.options[c1.selectedIndex].value + "&c2=" + c2.options[c2.selectedIndex].value + "&d=" + start_date.value;
         fetch(url, { method: "GET" })
@@ -86,4 +95,5 @@
             })
     }
 </script>
+
 </html>
